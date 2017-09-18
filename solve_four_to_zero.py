@@ -12,12 +12,15 @@ result_to_string = {
 
 def main():
     init_pos = 4
-    result = solve(init_pos)
-    print(result_to_string[result])
+    result, remoteness = solve(init_pos)
+    print('Result: {}\nRemoteness: {}'.format(
+        result_to_string[result],
+        remoteness,
+    ))
 
 def primitive(pos):
     if pos == 0:
-        return LOSS
+        return (LOSS, 0)
     return UNDECIDED
 
 def generate_moves(pos):
@@ -36,13 +39,13 @@ def solve(current_pos):
     all_wins = True
     for move in generate_moves(current_pos):
         new_pos = do_move(current_pos, move)
-        new_result = solve(new_pos)
+        new_result, new_remoteness = solve(new_pos)
         if new_result == LOSS:
-            return WIN
+            return (WIN, new_remoteness + 1)
         if new_result != WIN:
             all_wins = False
     if all_wins:
-        return LOSS
+        return (LOSS, new_remoteness + 1)
 
 if __name__ == '__main__':
     main()
